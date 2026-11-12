@@ -298,7 +298,9 @@ export default class DOMPatch {
             // eslint-disable-next-line no-self-assign
             el.srcset = el.srcset;
           } else if (el instanceof HTMLVideoElement && el.autoplay) {
-            el.play();
+            // native autoplay fails silently, so a failed play() must not
+            // surface as an unhandled rejection either
+            el.play().catch(() => {});
           }
           if (DOM.isNowTriggerFormExternal(el, phxTriggerExternal)) {
             externalFormTriggered = el;
